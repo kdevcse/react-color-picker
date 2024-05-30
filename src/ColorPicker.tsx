@@ -2,18 +2,25 @@ import './ColorPicker.css';
 import { Color } from './types/colorTypes';
 import { useState } from 'react';
 
+interface ColorPickerProps {
+    numOfShades?: number;
+    primaryColors: Color[];
+    secondaryColors: Color[];
+}
+
 /**
  * Color picker component that allows the user to select a color from a list of primary and secondary colors 
  * and copy the selected color to the clipboard
  * @param numOfShades The number of shades to generate for each color
  */
-export function ColorPicker({ numOfShades = 5 }) {
-    // Define the primary (red, blue, yellow) and secondary colors (green, orange, purple)
-    const primaryColors = [new Color(255, 0, 0), new Color(0, 0, 255), new Color(255, 255, 0)];
-    const secondaryColors = [new Color(0, 255, 0), new Color(255, 165, 0), new Color(255, 0, 255)];
+export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: ColorPickerProps) {
+    // Validate the primary and secondary colors
+    if (primaryColors.length === 0 || secondaryColors.length === 0) {
+        throw new Error('Primary and secondary colors must not be empty');
+    }
 
-    const [selectedPrimaryColor, setSelectedPrimaryColor] = useState('#ff0000'); // Set the initial primary color to red
-    const [selectedSecondaryColor, setSelectedSecondaryColor] = useState('#00ff00'); // Set the initial secondary color to green
+    const [selectedPrimaryColor, setSelectedPrimaryColor] = useState(primaryColors[0].toHexStr()); // Set the initial primary color to red
+    const [selectedSecondaryColor, setSelectedSecondaryColor] = useState(secondaryColors[0].toHexStr()); // Set the initial secondary color to green
     const [copiedToClipboardTxt, setCopiedToClipboardTxt] = useState(''); // Set the initial copied to clipboard text to null
     const [clearAlert, setClearAlert] = useState(true); // State used to keep track of the alert message
 
@@ -48,8 +55,8 @@ export function ColorPicker({ numOfShades = 5 }) {
             // Generate color option elements with decreasing brightness from the base color 
             for (let i = 0; i < numOfShades; i++) {
                 const brightnessVal = 100 - (i * (100 / numOfShades)); // Calculate the brightness value
-                color.brightness = brightnessVal; // Set the brightness value
-                const colorStr = color.toHexStr(); // Get the color in a hex string
+                const newColor = color.toNewColor(brightnessVal); // Generate a new color with the brightness value
+                const colorStr = newColor.toHexStr(); // Get the color in a hex string
                 // Render a color option element
                 options.push(
                     <option key={index + i} style={{ backgroundColor: colorStr }} className='color-picker-option'>{colorStr}</option>
