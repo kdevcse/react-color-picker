@@ -1,30 +1,57 @@
-# React + TypeScript + Vite
+# Color Picker Widget
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project provides a color picker widget built with React and TypeScript. The widget allows users to select primary and secondary colors from a predefined list.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js
+- npm
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. Clone the repository:
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+git clone https://github.com/your-repo/color-picker-widget.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Install the dependencies:
+```bash
+cd color-picker-widget
+```
+
+3. Install the dependencies
+```bash
+npm i
+```
+
+## Usage
+
+```TypeScript
+import { ColorPicker } from './path-to-color-picker';
+
+function App() {
+  return (
+    <div>
+      <ColorPicker />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Build
+
+```Bash
+npm run build
+```
+
+## Run in Development mode
+```Bash
+npm run dev
+```
+
+## Accessibility
+
+The color picker widget follows WAI-ARIA guidelines to ensure accessibility. It's navigable through keyboard and compatible with screen readers.

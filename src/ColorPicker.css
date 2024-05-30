@@ -1,0 +1,28 @@
+.color-picker-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+.color-picker-container > label {
+    margin-right: 5px;
+}
+.color-picker-container > select {
+    color: white;
+}
+.color-picker {
+    padding: 5px;
+    width: 200px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+.color-picker-option {
+    text-align: center;
+    padding: 5px;
+}
+.color-picker-alert {
+    margin-top: 5px;
+}
