@@ -12,6 +12,8 @@ interface ColorPickerProps {
  * Color picker component that allows the user to select a color from a list of primary and secondary colors 
  * and copy the selected color to the clipboard
  * @param numOfShades The number of shades to generate for each color
+ * @param primaryColors The list of primary colors
+ * @param secondaryColors The list of secondary colors
  */
 export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: ColorPickerProps) {
     // Validate the primary and secondary colors
