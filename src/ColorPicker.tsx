@@ -20,6 +20,8 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
     const [clearAlert, setClearAlert] = useState(true); // State used to keep track of the alert message
     const [selectedPrimaryColor, setSelectedPrimaryColor] = useState(primaryColors[0].toHexStr()); // Set the initial primary color to red
     const [selectedSecondaryColor, setSelectedSecondaryColor] = useState(secondaryColors[0].toHexStr()); // Set the initial secondary color to green
+    const [selectedPrimaryFgColor, setSelectedPrimaryFgColor] = useState('white'); // Set the initial primary color text color to black
+    const [selectedSecondaryFgColor, setSelectedSecondaryFgColor] = useState('black'); // Set the initial secondary color text color to black
 
     /**
      * Display an alert message for 3 seconds
@@ -36,13 +38,29 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
     }
 
     /**
+     * @param color The hex color to get the brightness of
+     * @returns 
+     */
+    function getBrightnessFromHex(color: string): number {
+        const rgb = parseInt(color.replace('#', ''), 16);   // convert rrggbb to decimal
+        const r = (rgb >> 16) & 0xff;  // extract red
+        const g = (rgb >>  8) & 0xff;  // extract green
+        const b = (rgb >>  0) & 0xff;  // extract blue
+    
+        // Calculate brightness according to the formula: (299*R + 587*G + 114*B) / 1000
+        return (299 * r + 587 * g + 114 * b) / 1000;
+    }
+
+    /**
      * Handle the color change event and copy the selected color to the clipboard
      * @param event The change event
-     * @param setSelectedColor The function to set the selected color
+     * @param setSelectedBgColor The function to set the selected color
      */
-    function handleColorChange(event: React.ChangeEvent<HTMLSelectElement>, setSelectedColor: React.Dispatch<React.SetStateAction<string>>) {
+    function handleColorChange(event: React.ChangeEvent<HTMLSelectElement>, setSelectedBgColor: React.Dispatch<React.SetStateAction<string>>, setSelectedFgColor: React.Dispatch<React.SetStateAction<string>>) {
         const colorStr = event.target.value; // Get the selected color
-        setSelectedColor(colorStr); // Set the selected color
+        setSelectedBgColor(colorStr); // Set the selected color
+
+        setSelectedFgColor(getBrightnessFromHex(colorStr) < 128 ? 'white' : 'black'); // Set the text color based on the brightness of the selected color
         navigator.clipboard.writeText(colorStr); // Copy the color to the clipboard
 
         // Alert the copied text);
@@ -66,8 +84,10 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
                 options.push(
                     <option 
                         key={index + i} 
-                        style={{ backgroundColor: colorStr }} 
+                        style={{ backgroundColor: colorStr, color: getBrightnessFromHex(colorStr) < 128 ? 'white' : 'black'}} 
                         aria-label={`Color Option: ${colorStr}`} 
+                        role='option'
+                        aria-selected={colorStr === selectedPrimaryColor || colorStr === selectedSecondaryColor}
                         className='color-picker-option'>
                             {colorStr}
                     </option>
@@ -83,8 +103,8 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
         <div className='color-picker-container'>
             <label htmlFor='primary-color-picker'>Primary</label>
             <select
-                style={{ backgroundColor: selectedPrimaryColor }}
-                onChange={(e) => handleColorChange(e, setSelectedPrimaryColor)}
+                style={{ backgroundColor: selectedPrimaryColor, color: selectedPrimaryFgColor}}
+                onChange={(e) => handleColorChange(e, setSelectedPrimaryColor, setSelectedPrimaryFgColor)}
                 className='color-picker'
                 id='primary-color-picker'
                 role="listbox"
@@ -94,8 +114,8 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
             </select>
             <label htmlFor='secondary-color-picker'>Secondary</label>
             <select
-                style={{ backgroundColor: selectedSecondaryColor }}
-                onChange={(e) => handleColorChange(e, setSelectedSecondaryColor)}
+                style={{ backgroundColor: selectedSecondaryColor, color: selectedSecondaryFgColor}}
+                onChange={(e) => handleColorChange(e, setSelectedSecondaryColor, setSelectedSecondaryFgColor)}
                 className='color-picker'
                 id='secondary-color-picker'
                 role="listbox"
@@ -103,7 +123,7 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
             >
                 {generateColors(secondaryColors)}
             </select>
-            <div className={`color-picker-alert ${!clearAlert ? 'active-alert' : ''}`}>
+            <div aria-label='Color picker alert' className={`color-picker-alert ${!clearAlert ? 'active-alert' : ''}`}>
                 {alertTxt}
             </div>
         </div>
