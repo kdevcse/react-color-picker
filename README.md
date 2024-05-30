@@ -26,9 +26,9 @@ npm i
 ```
 
 ## Usage
-`numOfShades`: The number of shades to generate for the base color
-`primaryColors`: Array of primary base colors to use for the color picker
-`secondaryColors`: Array of secondary base colors to use for the color picker
+- `numOfShades`: The number of shades to generate for the base color
+- `primaryColors`: Array of primary base colors to use for the color picker
+- `secondaryColors`: Array of secondary base colors to use for the color picker
 
 ```TypeScript
 import { ColorPicker } from './path-to-color-picker';
