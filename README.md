@@ -1,6 +1,6 @@
 # Color Picker Widget
 
-This project provides a color picker widget built with React and TypeScript. The widget allows users to select primary and secondary colors from a predefined list.
+This project provides a color picker widget built with React and TypeScript. The widget allows users to select primary and secondary colors from a predefined list and generates the desired amount of shades for the dropdown.
 
 ## Prerequisites
 

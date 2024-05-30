@@ -7,22 +7,37 @@
     flex-wrap: wrap;
     flex-direction: column;
 }
-.color-picker-container > label {
+
+.color-picker-container>label {
     margin-right: 5px;
 }
-.color-picker-container > select {
+
+.color-picker-container>select {
     color: white;
 }
+
 .color-picker {
     padding: 5px;
     width: 200px;
     overflow: hidden;
     border-radius: 4px;
 }
+
 .color-picker-option {
     text-align: center;
     padding: 5px;
 }
+
 .color-picker-alert {
     margin-top: 5px;
+    font-size: small;
+}
+
+.color-picker-alert:not(.active-alert) {
+    transition: opacity 3s;
+    opacity: 0;
+}
+
+.color-picker-alert.active-alert {
+    opacity: 1;
 }
