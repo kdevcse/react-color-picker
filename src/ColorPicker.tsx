@@ -16,15 +16,24 @@ interface ColorPickerProps {
  * @param secondaryColors The list of secondary colors
  */
 export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: ColorPickerProps) {
-    // Validate the primary and secondary colors
-    if (primaryColors.length === 0 || secondaryColors.length === 0) {
-        throw new Error('Primary and secondary colors must not be empty');
-    }
-
+    const [alertTxt, setAlertTxt] = useState(''); // Set the initial copied to clipboard text to null
+    const [clearAlert, setClearAlert] = useState(true); // State used to keep track of the alert message
     const [selectedPrimaryColor, setSelectedPrimaryColor] = useState(primaryColors[0].toHexStr()); // Set the initial primary color to red
     const [selectedSecondaryColor, setSelectedSecondaryColor] = useState(secondaryColors[0].toHexStr()); // Set the initial secondary color to green
-    const [copiedToClipboardTxt, setCopiedToClipboardTxt] = useState(''); // Set the initial copied to clipboard text to null
-    const [clearAlert, setClearAlert] = useState(true); // State used to keep track of the alert message
+
+    /**
+     * Display an alert message for 3 seconds
+     * @param msg The message to display
+     */
+    function alert(msg: string) {
+        setAlertTxt(msg); // Set the alert message
+        setClearAlert(false); // Show the alert message
+
+        // Clear the alert message after 3 seconds
+        setTimeout(() => {
+            setClearAlert(true); // Clear the alert message
+        }, 3000);
+    }
 
     /**
      * Handle the color change event and copy the selected color to the clipboard
@@ -36,14 +45,8 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
         setSelectedColor(colorStr); // Set the selected color
         navigator.clipboard.writeText(colorStr); // Copy the color to the clipboard
 
-        // Alert the copied text
-        setCopiedToClipboardTxt(`Copied '${colorStr}' to clipboard!`);
-        setClearAlert(false); // Show the alert message
-
-        // Clear the alert message after 3 seconds
-        setTimeout(() => {
-            setClearAlert(true); // Clear the alert message
-        }, 3000);
+        // Alert the copied text);
+        alert(`Copied ${colorStr} to clipboard`);
     }
 
     /**
@@ -101,7 +104,7 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
                 {generateColors(secondaryColors)}
             </select>
             <div className={`color-picker-alert ${!clearAlert ? 'active-alert' : ''}`}>
-                {copiedToClipboardTxt}
+                {alertTxt}
             </div>
         </div>
     );
