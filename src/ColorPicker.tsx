@@ -59,7 +59,13 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
                 const colorStr = newColor.toHexStr(); // Get the color in a hex string
                 // Render a color option element
                 options.push(
-                    <option key={index + i} style={{ backgroundColor: colorStr }} className='color-picker-option'>{colorStr}</option>
+                    <option 
+                        key={index + i} 
+                        style={{ backgroundColor: colorStr }} 
+                        aria-label={`Color Option: ${colorStr}`} 
+                        className='color-picker-option'>
+                            {colorStr}
+                    </option>
                 );
             }
             return options; // Return the list of color options
