@@ -12,7 +12,7 @@ This project provides a color picker widget built with React and TypeScript. The
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-repo/color-picker-widget.git
+git clone https://github.com/kdevcse/react-color-picker.git
 ```
 
 2. Install the dependencies:
