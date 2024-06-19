@@ -38,17 +38,20 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
     }
 
     /**
-     * @param color The hex color to get the brightness of
+     * Get the contrast color based on the brightness of the input color
+     * @param color The hex color to contrast against
      * @returns 
      */
-    function getBrightnessFromHex(color: string): number {
+    function getContrastColorFromHex(color: string): string {
         const rgb = parseInt(color.replace('#', ''), 16);   // convert rrggbb to decimal
         const r = (rgb >> 16) & 0xff;  // extract red
         const g = (rgb >>  8) & 0xff;  // extract green
         const b = (rgb >>  0) & 0xff;  // extract blue
     
-        // Calculate brightness according to the formula: (299*R + 587*G + 114*B) / 1000
-        return (299 * r + 587 * g + 114 * b) / 1000;
+        // Calculate brightness according to the YIQ formula: (299*R + 587*G + 114*B) / 1000
+        // https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/
+        const brightness = (299 * r + 587 * g + 114 * b) / 1000;
+        return brightness < 128 ? 'white' : 'black';
     }
 
     /**
@@ -60,7 +63,7 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
         const colorStr = event.target.value; // Get the selected color
         setSelectedBgColor(colorStr); // Set the selected color
 
-        setSelectedFgColor(getBrightnessFromHex(colorStr) < 128 ? 'white' : 'black'); // Set the text color based on the brightness of the selected color
+        setSelectedFgColor(getContrastColorFromHex(colorStr)); // Set the text color based on the brightness of the selected color for contrast
         navigator.clipboard.writeText(colorStr); // Copy the color to the clipboard
 
         // Alert the copied text);
@@ -70,7 +73,6 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
     /**
      * Generate the color options for A select element
      * @param colors The base colors to generate options for
-     * @param numOfShades The number of shades to generate for each color
      */
     function generateColors(colors: Color[]) {
         return colors.map((color, index) => {
@@ -80,11 +82,12 @@ export function ColorPicker({ numOfShades = 5, primaryColors, secondaryColors}: 
                 const brightnessVal = 100 - (i * (100 / numOfShades)); // Calculate the brightness value
                 const newColor = color.toNewColor(brightnessVal); // Generate a new color with the brightness value
                 const colorStr = newColor.toHexStr(); // Get the color in a hex string
+
                 // Render a color option element
                 options.push(
                     <option 
-                        key={index + i} 
-                        style={{ backgroundColor: colorStr, color: getBrightnessFromHex(colorStr) < 128 ? 'white' : 'black'}} 
+                        key={(index * numOfShades) + i} 
+                        style={{ backgroundColor: colorStr, color: getContrastColorFromHex(colorStr)}} 
                         aria-label={`Color Option: ${colorStr}`} 
                         role='option'
                         aria-selected={colorStr === selectedPrimaryColor || colorStr === selectedSecondaryColor}
